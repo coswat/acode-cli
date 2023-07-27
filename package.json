@@ -8,6 +8,7 @@
     "build": "tsc",
     "serve-cli": "ts-node ./src/main.ts"
   },
+  "types": "types/index.d.ts",
   "keywords": [
     "acode",
     "acode-cli",
