@@ -1,24 +1,42 @@
 const inquirer = require("inquirer");
 const Listr = require("listr");
-const prompts = require("./createrPrompts.js");
-const shellExec = require("./shellExec.js");
+const prompts = require("./createrPrompts");
+import shellExec from "./shellExec";
 const fs = require("fs");
 require("dotenv").config();
 
+// interface for Prompts
+interface Prompts {
+  projectName: string;
+  language: "JavaScript" | "TypeScript";
+  usePrettier: boolean;
+  useGit: boolean;
+  installDep: boolean;
+}
+
+// interface for Answers
+interface Answers {
+  projectName: string;
+  language: string;
+  usePrettier: boolean;
+  useGit: boolean;
+  installDep: boolean;
+}
+
 // Acode plugin url ( Js version )
-const jsPlugin = process.env.JS_TEMPLATE_URL;
+const jsPlugin: string | undefined = process.env.JS_TEMPLATE_URL;
 // Acode plugin url ( Ts version )
-const tsPlugin = process.env.TS_TEMPLATE_URL;
+const tsPlugin: string | undefined = process.env.TS_TEMPLATE_URL;
 
 // Main function
-async function createAcodePlugin() {
+async function createAcodePlugin(): Promise<void> {
   // questions to ask
-  const questions = prompts;
+  const questions: Prompts = prompts;
   try {
-    const answers = await inquirer.prompt(questions);
+    const answers: Answers = await inquirer.prompt(questions);
     const { projectName, language, usePrettier, useGit, installDep } = answers;
     // current directory
-    const currentDir = process.cwd();
+    const currentDir: string = process.cwd();
     // tasks to run
     const tasks = new Listr([
       {
@@ -74,25 +92,25 @@ async function createAcodePlugin() {
     console.log(
       `Acode plugin '${projectName}' with ${language} successfully created!`
     );
-  } catch (error) {
+  } catch (error: any) {
     // Error handling
     console.error("Error occurred:", error.message);
     process.exit(1);
   }
 }
 // add prettier to package.json
-async function addPrettier() {
+async function addPrettier(): Promise<void> {
   // locate the package.json path
-  const packageJsonPath = process.cwd() + "/package.json";
+  const packageJsonPath: string = process.cwd() + "/package.json";
   // require the file
-  const packageJson = require(packageJsonPath);
+  const packageJson: any = require(packageJsonPath);
   // add prettier package as a dev dependency
   packageJson.devDependencies = {
     ...packageJson.devDependencies,
     prettier: "3.0.0",
   };
   // json stringify the updated variable
-  const updatedPackageJson = JSON.stringify(packageJson, null, 2);
+  const updatedPackageJson: string = JSON.stringify(packageJson, null, 2);
   // update the original package.json file
   fs.writeFileSync(packageJsonPath, updatedPackageJson, "utf8");
 }

@@ -1,11 +1,11 @@
-const create = require("./creater.js");
-const docs = require("./docs.js");
-const shellExec = require("./shellExec.js");
+const create = require("./creater");
+const docs = require("./docs");
+import shellExec from "./shellExec";
 const { Command } = require("commander");
 require("dotenv").config();
 
 // version
-let version = process.env.VERSION;
+let version: string | undefined = process.env.VERSION;
 
 // create a new command instance
 const program = new Command();

@@ -1,14 +1,14 @@
 const os = require("os");
-const shellExec = require("./shellExec.js");
+import shellExec from "./shellExec";
 require("dotenv").config();
 
 // get the os name
-const platform = os.platform();
+const platform: string = os.platform();
 // plugin docs url
-const docsUrl = process.env.DOCS_URL;
+const docsUrl: string | undefined = process.env.DOCS_URL;
 
 // main function docs , to fetch the appropriate command for the os and to executing them
-async function docs() {
+async function docs(): Promise<void> {
   if (platform === "win32") {
     await openDocs(`start ${docsUrl}`);
   } else if (platform === "darwin") {
@@ -19,7 +19,7 @@ async function docs() {
 }
 
 // open plugin docs url in web
-async function openDocs(command) {
+async function openDocs(command: string): Promise<void> {
   console.log(`Opening ${docsUrl}`);
   shellExec(command);
 }

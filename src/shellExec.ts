@@ -3,7 +3,7 @@ const shelljs = require("shelljs");
 const { exec } = shelljs;
 
 // function to execute commands in cli
-function shellExec(command, silentMode = true) {
+function shellExec(command: string, silentMode: boolean = true): void {
   const result = exec(command, { silent: silentMode });
   if (result.code !== 0) {
     throw new Error(`Error executing command: ${command}`);
@@ -11,4 +11,4 @@ function shellExec(command, silentMode = true) {
 }
 
 // export the shellExec function
-module.exports = shellExec;
+export default shellExec;
