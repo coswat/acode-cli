@@ -8,18 +8,18 @@ const platform = os.platform();
 const docsUrl = process.env.DOCS_URL;
 
 // main function docs , to fetch the appropriate command for the os and to executing them
-function docs() {
+async function docs() {
   if (platform === "win32") {
-    openDocs(`start ${docsUrl}`);
+    await openDocs(`start ${docsUrl}`);
   } else if (platform === "darwin") {
-    openDocs(`open ${docsUrl}`);
+    await openDocs(`open ${docsUrl}`);
   } else {
-    openDocs(`xdg-open ${docsUrl}`);
+    await openDocs(`xdg-open ${docsUrl}`);
   }
 }
 
 // open plugin docs url in web
-function openDocs(command) {
+async function openDocs(command) {
   console.log(`Opening ${docsUrl}`);
   shellExec(command);
 }

@@ -1,46 +1,43 @@
 const create = require("./creater.js");
 const docs = require("./docs.js");
 const shellExec = require("./shellExec.js");
+const { Command } = require("commander");
+require("dotenv").config();
 
-// get the argument from
-let command = process.argv[2];
+// version
+let version = process.env.VERSION;
 
-// index message
-if (!command) {
-  console.log(`
-Acode Plugin CLI v 1.0.0 ( MIT )
+// create a new command instance
+const program = new Command();
 
-Usage:
-
-command [options] [arguments]
-
-Available commands:
-
-create             create a acode plugin template
-docs               open plugin docs
-build              alternative of npm run build
-build-release      alternative of npm run build-release
-`);
-  process.exit(0);
-}
-
-// run the corresponding command with its name
-switch (command) {
-  case "create":
-    create();
-    break;
-  case "docs":
-    docs();
-    break;
-  case "build":
+program
+  .name("acode-cli")
+  .description(`Acode Plugin CLI ${version} (MIT) `)
+  .version(`${version}`);
+program
+  .command("create")
+  .description("Create a acode plugin template")
+  .action(async () => {
+    await create();
+  });
+program
+  .command("docs")
+  .description("Open the plugin docs")
+  .action(async () => {
+    await docs();
+  });
+program
+  .command("build")
+  .description("Alternative of npm run build")
+  .action(() => {
     process.chdir(process.cwd());
     shellExec("npm run build", false);
-    break;
-  case "build-release":
+  });
+program
+  .command("build-release")
+  .description("Alternative of npm run build-release")
+  .action(() => {
     process.chdir(process.cwd());
     shellExec("npm run build-release", false);
-    break;
-  default:
-    // when command not found
-    console.error("Invalid command " + command);
-}
+  });
+program.parse();
