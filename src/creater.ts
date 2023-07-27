@@ -41,20 +41,20 @@ async function createAcodePlugin(): Promise<void> {
     const tasks = new Listr([
       {
         title: "Cloning plugin template",
-        task: () => {
+        task: async () => {
           process.chdir(currentDir);
           if (language === "TypeScript") {
-            shellExec(`git clone ${tsPlugin} ${projectName}`);
+            await shellExec(`git clone ${tsPlugin} ${projectName}`);
           } else {
-            shellExec(`git clone ${jsPlugin} ${projectName}`);
+            await shellExec(`git clone ${jsPlugin} ${projectName}`);
           }
         },
       },
       {
         title: "CleanUps",
-        task: () => {
+        task: async () => {
           process.chdir(currentDir + "/" + projectName);
-          shellExec("rm -rf .git");
+          await shellExec("rm -rf .git");
         },
       },
       {
@@ -67,9 +67,9 @@ async function createAcodePlugin(): Promise<void> {
       },
       {
         title: "Initializing Git repository",
-        task: () => {
+        task: async () => {
           if (useGit) {
-            shellExec(
+            await shellExec(
               'git init && git add . && git commit -m "Initial Commit"'
             );
           }
@@ -77,9 +77,9 @@ async function createAcodePlugin(): Promise<void> {
       },
       {
         title: "Installing npm dependencies",
-        task: () => {
+        task: async () => {
           if (installDep) {
-            shellExec("npm install");
+            await shellExec("npm install");
           }
         },
       },

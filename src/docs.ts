@@ -21,7 +21,7 @@ async function docs(): Promise<void> {
 // open plugin docs url in web
 async function openDocs(command: string): Promise<void> {
   console.log(`Opening ${docsUrl}`);
-  shellExec(command);
+  await shellExec(command);
 }
 
 // export the docs function

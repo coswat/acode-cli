@@ -29,16 +29,16 @@ program
 program
   .command("build")
   .description("Alternative of npm run build")
-  .action(() => {
+  .action(async () => {
     process.chdir(process.cwd());
-    shellExec("npm run build", false);
+    await shellExec("npm run build", false);
   });
 program
   .command("build-release")
   .description("Alternative of npm run build-release")
-  .action(() => {
+  .action(async () => {
     process.chdir(process.cwd());
-    shellExec("npm run build-release", false);
+    await shellExec("npm run build-release", false);
   });
 program
   .command("src")
