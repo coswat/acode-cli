@@ -16,7 +16,7 @@ async function createAcodePlugin() {
 
   try {
     const answers = await inquirer.prompt(questions);
-    const { projectName, language, usePrettier, useGit , installDep } = answers;
+    const { projectName, language, usePrettier, useGit, installDep } = answers;
     // current directory
     const currentDir = process.cwd();
     // tasks to run
@@ -51,9 +51,9 @@ async function createAcodePlugin() {
         title: "Initializing Git repository",
         task: () => {
           if (useGit) {
-            shellExec("git init");
-            shellExec("git add .");
-            shellExec('git commit -m "Initial commit"');
+            shellExec(
+              'git init && git add . && git commit -m "Initial Commit"'
+            );
           }
         },
       },
