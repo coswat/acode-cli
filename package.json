@@ -7,10 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve-cli": "ts-node ./src/main.ts"
   },
-  "keywords": ["acode", "acode-cli", "acode-plugin-cli"],
+  "keywords": [
+    "acode",
+    "acode-cli",
+    "acode-plugin-cli"
+  ],
   "author": "Abhishek B | Coderswat",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^4.1.2",
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
     "inquirer": "^8.2.5",

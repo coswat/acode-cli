@@ -1,3 +1,4 @@
+const chalk = require("chalk");
 // promts for 'create' command
 module.exports = [
   {
@@ -10,7 +11,7 @@ module.exports = [
     type: "list",
     name: "language",
     message: "Choose a language:",
-    choices: ["JavaScript", "TypeScript"],
+    choices: [chalk.yellow("JavaScript"), chalk.cyan("TypeScript")],
   },
   {
     type: "confirm",

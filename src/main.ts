@@ -14,18 +14,21 @@ program
   .name("acode-cli")
   .description(`Acode Plugin CLI ${version} (MIT) `)
   .version(`${version}`);
+// Create Command
 program
   .command("create")
   .description("Create a acode plugin template")
   .action(async () => {
     await create();
   });
+// Docs Command
 program
   .command("docs")
   .description("Open the plugin docs")
   .action(async () => {
     await docs();
   });
+// Build Command
 program
   .command("build")
   .description("Alternative of npm run build")
@@ -33,6 +36,7 @@ program
     process.chdir(process.cwd());
     await shellExec("npm run build", false);
   });
+// Build Release Command
 program
   .command("build-release")
   .description("Alternative of npm run build-release")
@@ -40,10 +44,12 @@ program
     process.chdir(process.cwd());
     await shellExec("npm run build-release", false);
   });
+// Source Command
 program
   .command("src")
   .description("Acode cli source code")
   .action(() => {
     console.log(`Source code url : ${process.env.SRC_CODE}`);
   });
+
 program.parse();

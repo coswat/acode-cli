@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 const Listr = require("listr");
 const prompts = require("./createrPrompts");
 import shellExec from "./shellExec";
+const chalk = require("chalk");
 const fs = require("fs");
 require("dotenv").config();
 
@@ -85,16 +86,20 @@ async function createAcodePlugin(): Promise<void> {
       },
     ]);
     // Creating template messgae
-    console.log(`Creating Acode plugin '${projectName}' with ${language}...`);
+    console.log(
+      chalk.yellow(`Creating Acode plugin '${projectName}' with ${language}...`)
+    );
     // running all the tasks
     await tasks.run();
     // Success message
     console.log(
-      `Acode plugin '${projectName}' with ${language} successfully created!`
+      chalk.yellow(
+        `Acode plugin '${projectName}' with ${language} successfully created!`
+      )
     );
   } catch (error: any) {
     // Error handling
-    console.error("Error occurred:", error.message);
+    console.error(chalk.red("Error occurred:"), error.message);
     process.exit(1);
   }
 }
