@@ -8,7 +8,7 @@
     "build": "tsc",
     "serve-cli": "ts-node ./src/main.ts"
   },
-  "types": "types/index.d.ts",
+  "types": "./types/index.d.ts",
   "keywords": [
     "acode",
     "acode-cli",
@@ -31,5 +31,12 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
-  "bin": "./bin/acode-cli"
+  "bin": "./bin/acode-cli",
+  "bugs": {
+    "url": "https://github.com/coswat/acode-cli/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coswat/acode-cli.git"
+  }
 }
