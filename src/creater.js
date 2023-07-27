@@ -12,8 +12,8 @@ const tsPlugin = process.env.TS_TEMPLATE_URL;
 
 // Main function
 async function createAcodePlugin() {
+  // questions to ask
   const questions = prompts;
-
   try {
     const answers = await inquirer.prompt(questions);
     const { projectName, language, usePrettier, useGit, installDep } = answers;
