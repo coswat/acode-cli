@@ -40,4 +40,10 @@ program
     process.chdir(process.cwd());
     shellExec("npm run build-release", false);
   });
+program
+  .command("src")
+  .description("Acode cli source code")
+  .action(() => {
+    console.log(`Source code url : ${process.env.SRC_CODE}`);
+  });
 program.parse();
