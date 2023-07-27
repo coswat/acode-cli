@@ -2,7 +2,11 @@ const create = require("./creater");
 const docs = require("./docs");
 import shellExec from "./shellExec";
 const { Command } = require("commander");
-require("dotenv").config();
+const path = require("path");
+
+const dotenvPath: string = path.resolve(__dirname, "../config/", ".env");
+
+require("dotenv").config({ path: dotenvPath });
 
 // version
 let version: string | undefined = process.env.VERSION;

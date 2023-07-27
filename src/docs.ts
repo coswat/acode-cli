@@ -1,6 +1,10 @@
 const os = require("os");
 import shellExec from "./shellExec";
-require("dotenv").config();
+const path = require("path");
+
+const dotenvPath: string = path.resolve(__dirname, "../config/", ".env");
+
+require("dotenv").config({ path: dotenvPath });
 
 // get the os name
 const platform: string = os.platform();
