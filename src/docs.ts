@@ -7,7 +7,6 @@ const dotenvPath: string = path.resolve(__dirname, "../config/", ".env");
 
 // require the dotenv file
 require("dotenv").config({ path: dotenvPath });
-
 // get the os name
 const platform: string = os.platform();
 // plugin docs url

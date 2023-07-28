@@ -1,6 +1,7 @@
 const create = require("./creater");
 const docs = require("./docs");
 import shellExec from "./shellExec";
+import updateVersion from "./versionUpdater";
 const { Command } = require("commander");
 const path = require("path");
 
@@ -50,6 +51,13 @@ program
     process.chdir(process.cwd());
     await shellExec("npm run build-release", false);
   });
+// Version updater Command
+program
+  .command("version <type>")
+  .description("Update the plugin version")
+  .action(async (type: string) => {
+    await updateVersion(type);
+  });
 // Source Command
 program
   .command("src")
@@ -58,4 +66,4 @@ program
     console.log(`Source code url : ${process.env.SRC_CODE}`);
   });
 
-program.parse();
+program.parse(process.argv);

@@ -11,7 +11,6 @@ const dotenvPath: string = path.resolve(__dirname, "../config/", ".env");
 
 // require the dotenv file
 require("dotenv").config({ path: dotenvPath });
-
 // interface for Prompts
 interface Prompts {
   projectName: string;
