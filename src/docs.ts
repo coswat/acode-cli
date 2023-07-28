@@ -1,12 +1,10 @@
 const os = require("os");
 import shellExec from "./shellExec";
-const path = require("path");
+const helper = require("./helper");
 
-// absolute dotenv path
-const dotenvPath: string = path.resolve(__dirname, "../config/", ".env");
+// load the env file
+helper.loadEnv();
 
-// require the dotenv file
-require("dotenv").config({ path: dotenvPath });
 // get the os name
 const platform: string = os.platform();
 // plugin docs url

@@ -3,13 +3,10 @@ const docs = require("./docs");
 import shellExec from "./shellExec";
 import updateVersion from "./versionUpdater";
 const { Command } = require("commander");
-const path = require("path");
+const helper = require("./helper");
 
-// absolute dotenv path
-const dotenvPath: string = path.resolve(__dirname, "../config/", ".env");
-
-// require the dotenv file
-require("dotenv").config({ path: dotenvPath });
+// load the env file
+helper.loadEnv();
 
 // version
 let version: string | undefined = process.env.VERSION;

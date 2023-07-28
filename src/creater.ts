@@ -4,13 +4,10 @@ const prompts = require("./createrPrompts");
 import shellExec from "./shellExec";
 const chalk = require("chalk");
 const fs = require("fs");
-const path = require("path");
+const helper = require("./helper");
 
-// absolute dotenv path
-const dotenvPath: string = path.resolve(__dirname, "../config/", ".env");
-
-// require the dotenv file
-require("dotenv").config({ path: dotenvPath });
+// load the env file
+helper.loadEnv();
 // interface for Prompts
 interface Prompts {
   projectName: string;
