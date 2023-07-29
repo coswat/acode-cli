@@ -2,6 +2,7 @@ const create = require("./creater");
 const docs = require("./docs");
 import shellExec from "./shellExec";
 import updateVersion from "./versionUpdater";
+import updateCli from "./cliUpdater";
 const { Command } = require("commander");
 const helper = require("./helper");
 const chalk = require("chalk");
@@ -83,6 +84,13 @@ program
     .description("Acode cli source code")
     .action(() => {
         console.log(`Source code url : ${process.env.SRC_CODE}`);
+    });
+// Acode CLI Updater
+program
+    .command("self-update")
+    .description("Update the Acode cli to the latest version")
+    .action(async () => {
+        await updateCli(version);
     });
 
 program.parse(process.argv);
