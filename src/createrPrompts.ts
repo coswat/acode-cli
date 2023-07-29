@@ -93,7 +93,7 @@ module.exports = [
         type: "input",
         name: "authorGitHubUname",
         message:
-            "Enter the Github username of Plugin developer(like: coswat or bajrangCoder):",
+            "Enter the Github username of Plugin developer!:",
         default: "",
     },
     {
