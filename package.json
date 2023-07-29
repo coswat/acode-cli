@@ -5,7 +5,7 @@
   "main": "lib/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "tsc && npm link .",
     "serve-cli": "ts-node ./src/main.ts"
   },
   "types": "./types/index.d.ts",
