@@ -1,6 +1,6 @@
 {
   "name": "@coswat/acode-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Acode Plugin CLI",
   "main": "lib/main.js",
   "scripts": {

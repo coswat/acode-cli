@@ -14,6 +14,11 @@ interface Prompts {
     language: "JavaScript" | "TypeScript";
     usePrettier: boolean;
     useGit: boolean;
+    pluginId: string;
+    pluginPrice: number;
+    authorName: string;
+    authorEmail: string;
+    authorGitHubUname: string;
     installDep: boolean;
 }
 
@@ -23,6 +28,11 @@ interface Answers {
     language: string;
     usePrettier: boolean;
     useGit: boolean;
+    pluginId: string;
+    pluginPrice: number;
+    authorName: string;
+    authorEmail: string;
+    authorGitHubUname: string;
     installDep: boolean;
 }
 
@@ -37,8 +47,18 @@ async function createAcodePlugin(): Promise<void> {
     const questions: Prompts = prompts;
     try {
         const answers: Answers = await inquirer.prompt(questions);
-        const { projectName, language, usePrettier, useGit, installDep } =
-            answers;
+        const {
+            projectName,
+            language,
+            usePrettier,
+            useGit,
+            pluginId,
+            pluginPrice,
+            authorName,
+            authorEmail,
+            authorGitHubUname,
+            installDep,
+        } = answers;
         // current directory
         const currentDir: string = process.cwd();
         // tasks to run
@@ -77,6 +97,19 @@ async function createAcodePlugin(): Promise<void> {
                             'git init && git add . && git commit -m "Initial Commit"'
                         );
                     }
+                },
+            },
+            {
+                title: "Setting up plugin.json info",
+                task: async () => {
+                    await setUpPluginInfo(
+                        pluginId,
+                        pluginPrice,
+                        projectName,
+                        authorName,
+                        authorEmail,
+                        authorGitHubUname
+                    );
                 },
             },
             {
@@ -124,5 +157,39 @@ async function addPrettier(): Promise<void> {
     // update the original package.json file
     fs.writeFileSync(packageJsonPath, updatedPackageJson, "utf8");
 }
+
+async function setUpPluginInfo(
+    pluginId: string,
+    pluginPrice: number,
+    projectName: string,
+    authorName: string,
+    authorEmail: string,
+    authorGitHubUname: string
+): Promise<void> {
+    /*
+    add user credentials to plugin.json
+    */
+    // locate the plugin.json path
+    const pluginJsonPath: string = process.cwd() + "/plugin.json";
+    // require the file
+    const pluginJson: any = require(pluginJsonPath);
+    // modifying id of Plugin
+    pluginJson.id = pluginId;
+    // modifying price of Plugin
+    pluginJson.price = pluginPrice;
+    // modifying name of Plugin
+    pluginJson.name = projectName;
+    // modifying 'author' name of Plugin
+    pluginJson.author.name = authorName;
+    // modifying 'author' email of Plugin
+    pluginJson.author.email = authorEmail;
+    // modifying 'author' github username of Plugin
+    pluginJson.author.github = authorGitHubUname;
+    // json stringify the updated variable
+    const updatedPluginJson: string = JSON.stringify(pluginJson, null, 2);
+    // update the original plugin.json file
+    fs.writeFileSync(pluginJsonPath, updatedPluginJson, "utf8");
+}
+
 // export the creator function
 module.exports = createAcodePlugin;
