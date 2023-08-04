@@ -1,4 +1,3 @@
-const chalk = require("chalk");
 
 // maximum plugin id length
 const pluginIdRegex: RegExp = /^[a-zA-Z][a-zA-Z0-9._-]{3,49}$/;
@@ -18,7 +17,7 @@ module.exports = [
         type: "list",
         name: "language",
         message: "Choose a language:",
-        choices: [chalk.yellow("JavaScript"), chalk.cyan("TypeScript")],
+        choices: ["JavaScript","TypeScript"],
     },
     {
         type: "confirm",
