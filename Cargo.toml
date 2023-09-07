@@ -1,6 +1,6 @@
 [package]
 name = "acode-cli"
-version = "0.1.0"
+version = "1.0.5"
 edition = "2021"
 author = "coswat"
 description = "Acode Plugin CLI [ MIT ]"
