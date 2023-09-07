@@ -15,12 +15,6 @@ cargo build --release
 mv target/release/acode-cli ~/.local/bin/
 ```
 
-using curl
-
-```bash
-curl -sL https://raw.githubusercontent.com/coswat/acode-cli/master/install.sh | sh
-```
-
 ## Usage
 
 run it using `acode-cli` command

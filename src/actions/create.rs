@@ -65,7 +65,7 @@ impl Default for PluginJson {
 impl Command for Create {
     fn action(&self) -> Result<(), Error> {
         let config = Config::new();
-        let ans = prompts();
+        let ans = prompts()?;
         let dir = env::current_dir()?;
         env::set_current_dir(&dir)?;
         let mut sp = Spinner::new(Spinners::Line, "Cloning plugin template...".into());
@@ -104,30 +104,26 @@ impl Command for Create {
     }
 }
 
-fn prompts() -> Answers {
+fn prompts() -> Result<Answers, Error> {
     let theme = ColorfulTheme::default();
     let name = Input::with_theme(&theme)
         .with_prompt("Enter a name for your Acode plugin:")
         .default("test-plugin".to_string())
-        .interact_text()
-        .unwrap();
+        .interact_text()?;
     let langs = &["JavaScript", "TypeScript"];
     let lang = Select::with_theme(&theme)
         .with_prompt("Choose a language")
         .default(0)
         .items(&langs[..])
-        .interact()
-        .unwrap();
+        .interact()?;
     let git = Confirm::with_theme(&theme)
         .with_prompt("Initializing Git repository")
         .default(true)
-        .interact()
-        .unwrap();
+        .interact()?;
     let plugin_id = Input::with_theme(&theme)
         .with_prompt("Enter id for your Acode Plugin:")
         .default("test_plugin_12".to_string())
-        .interact()
-        .unwrap();
+        .interact()?;
     let price = Input::with_theme(&theme)
         .with_prompt("Enter price for your Acode Plugin in INR, if it's free then leave it on default value:")
         .default(0)
@@ -138,30 +134,25 @@ fn prompts() -> Answers {
             }
             Ok(())
         })
-        .interact()
-        .unwrap();
+        .interact()?;
     let author = Input::with_theme(&theme)
         .with_prompt("Enter the Name of Plugin developer:")
         .default("".to_string())
-        .interact()
-        .unwrap();
+        .interact()?;
     let email = Input::with_theme(&theme)
         .with_prompt("Enter the Email of Plugin developer:")
         .default("".to_string())
-        .interact()
-        .unwrap();
+        .interact()?;
     let github_name = Input::with_theme(&theme)
         .with_prompt("Enter the Github username of Plugin developer!:")
         .default("".to_string())
-        .interact()
-        .unwrap();
+        .interact()?;
     let install_dep = Confirm::with_theme(&theme)
         .with_prompt("Install npm dependencies?")
         .default(true)
-        .interact()
-        .unwrap();
+        .interact()?;
 
-    Answers {
+    Ok(Answers {
         name,
         lang: langs[lang].to_string(),
         git,
@@ -171,7 +162,7 @@ fn prompts() -> Answers {
         email,
         github_name,
         install_dep,
-    }
+    })
 }
 
 fn plugin_json(id: String, price: i32, name: String, email: String, github: String) -> Result<()> {
