@@ -3,6 +3,7 @@ mod cli;
 mod cmd_exec;
 mod command;
 mod config;
+mod error;
 
 use crate::command::{Command, Commands};
 use anyhow::{Error, Result};

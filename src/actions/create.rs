@@ -1,22 +1,47 @@
-use anyhow::Result;
+use crate::{cmd_exec::exec, command::Command, config::Config};
+use anyhow::{Error, Result};
+use clap::Args;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input, Select};
 use serde::{Deserialize, Serialize};
 use serde_json;
-use std::fs;
+use std::{env, fs};
+
+#[derive(Debug, Args)]
+pub struct Create {}
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct PluginJson {
-    pub id: String,
-    pub name: String,
-    pub main: String,
-    pub version: String,
-    pub readme: String,
-    pub icon: String,
-    pub files: Vec<String>,
+struct PluginJson {
+    id: String,
+    name: String,
+    main: String,
+    version: String,
+    readme: String,
+    icon: String,
+    files: Vec<String>,
     #[serde(rename = "minVersionCode")]
-    pub min_version_code: i32,
-    pub price: i32,
-    pub author: Author,
+    min_version_code: i32,
+    price: i32,
+    author: Author,
+}
+
+#[derive(Debug, Serialize, Deserialize, Default)]
+struct Author {
+    name: String,
+    email: String,
+    github: String,
+}
+
+#[derive(Debug)]
+struct Answers {
+    name: String,
+    lang: String,
+    git: bool,
+    plugin_id: String,
+    price: i32,
+    author: String,
+    email: String,
+    github_name: String,
+    install_dep: bool,
 }
 
 impl Default for PluginJson {
@@ -36,28 +61,40 @@ impl Default for PluginJson {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Default)]
-pub struct Author {
-    pub name: String,
-    pub email: String,
-    pub github: String,
+impl Command for Create {
+    fn action(&self) -> Result<(), Error> {
+        let config = Config::new();
+        let ans = prompts();
+        let dir = env::current_dir()?;
+        env::set_current_dir(&dir)?;
+        if ans.lang == "JavaScript" {
+            exec("git", &["clone", config.js_template, &ans.name])?;
+        } else {
+            exec("git", &["clone", config.ts_template, &ans.name])?;
+        }
+        env::set_current_dir(dir.join(&ans.name))?;
+        exec("rm", &["-rf", ".git"])?;
+        exec("rm", &["-rf", "plugin.json"])?;
+        if ans.git {
+            exec("git", &["init"])?;
+            exec("git", &["add", "."])?;
+            exec("git", &["commit", "-m", "Initial commit"])?;
+        }
+        plugin_json(
+            ans.plugin_id,
+            ans.price,
+            ans.author,
+            ans.email,
+            ans.github_name,
+        )?;
+        if ans.install_dep {
+            exec("npm", &["install"])?;
+        }
+        Ok(())
+    }
 }
 
-#[derive(Debug)]
-pub struct Answers {
-    pub name: String,
-    pub lang: String,
-    pub prettier: bool,
-    pub git: bool,
-    pub plugin_id: String,
-    pub price: i32,
-    pub author: String,
-    pub email: String,
-    pub github_name: String,
-    pub install_dep: bool,
-}
-
-pub fn prompts() -> Answers {
+fn prompts() -> Answers {
     let theme = ColorfulTheme::default();
     let name = Input::with_theme(&theme)
         .with_prompt("Enter a name for your Acode plugin:")
@@ -69,11 +106,6 @@ pub fn prompts() -> Answers {
         .with_prompt("Choose a language")
         .default(0)
         .items(&langs[..])
-        .interact()
-        .unwrap();
-    let prettier = Confirm::with_theme(&theme)
-        .with_prompt("Do you want to use Prettier for code formatting?")
-        .default(true)
         .interact()
         .unwrap();
     let git = Confirm::with_theme(&theme)
@@ -122,7 +154,6 @@ pub fn prompts() -> Answers {
     Answers {
         name,
         lang: langs[lang].to_string(),
-        prettier,
         git,
         plugin_id,
         price,
@@ -133,13 +164,7 @@ pub fn prompts() -> Answers {
     }
 }
 
-pub fn plugin_json(
-    id: String,
-    price: i32,
-    name: String,
-    email: String,
-    github: String,
-) -> Result<()> {
+fn plugin_json(id: String, price: i32, name: String, email: String, github: String) -> Result<()> {
     let mut json = PluginJson::default();
     json.id = id;
     json.price = price;

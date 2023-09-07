@@ -1,10 +1,11 @@
-use anyhow::{anyhow, Result};
+use crate::error::CliError;
+use anyhow::Result;
 use std::process::{Command, Stdio};
 
-pub struct Executer<'a> {
-    cmd: String,
-    args: Vec<&'a str>,
-}
+// pub struct Executer<'a> {
+//     cmd: String,
+//     args: Vec<&'a str>,
+// }
 
 pub fn exec<T, U>(cmd: T, args: &[U]) -> Result<()>
 where
@@ -19,7 +20,7 @@ where
     cmd.stderr(Stdio::null());
     let status = cmd.status()?;
     if !status.success() {
-        return Err(anyhow!("Unable to execute command"));
+        return Err(CliError::CommandFailed.into());
     }
     Ok(())
 }
