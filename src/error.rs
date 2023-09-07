@@ -6,6 +6,6 @@ pub enum CliError {
     PlatformNotSupported,
     #[error("Error executing command")]
     CommandFailed,
-    #[error("Unknown error occurred")]
-    Unknown,
+    //  #[error("Unknown error occurred")]
+    //  Unknown,
 }

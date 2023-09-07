@@ -4,6 +4,7 @@ use clap::Args;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input, Select};
 use serde::{Deserialize, Serialize};
 use serde_json;
+use spinners::{Spinner, Spinners};
 use std::{env, fs};
 
 #[derive(Debug, Args)]
@@ -67,19 +68,24 @@ impl Command for Create {
         let ans = prompts();
         let dir = env::current_dir()?;
         env::set_current_dir(&dir)?;
+        let mut sp = Spinner::new(Spinners::Line, "Cloning plugin template...".into());
         if ans.lang == "JavaScript" {
             exec("git", &["clone", config.js_template, &ans.name])?;
         } else {
             exec("git", &["clone", config.ts_template, &ans.name])?;
         }
+        sp.stop_with_message(" Plugin template cloned successfully".into());
         env::set_current_dir(dir.join(&ans.name))?;
         exec("rm", &["-rf", ".git"])?;
         exec("rm", &["-rf", "plugin.json"])?;
         if ans.git {
+            let mut sp = Spinner::new(Spinners::Line, "Initializing git repo...".into());
             exec("git", &["init"])?;
             exec("git", &["add", "."])?;
             exec("git", &["commit", "-m", "Initial commit"])?;
+            sp.stop_with_message(" Initialized git repo".into());
         }
+        let mut sp = Spinner::new(Spinners::Line, "Creating plugin.json file".into());
         plugin_json(
             ans.plugin_id,
             ans.price,
@@ -87,9 +93,13 @@ impl Command for Create {
             ans.email,
             ans.github_name,
         )?;
+        sp.stop_with_message(" Created plugin.json".into());
         if ans.install_dep {
+            let mut sp = Spinner::new(Spinners::Line, "Installing npm dependencies...".into());
             exec("npm", &["install"])?;
+            sp.stop_with_message(" Installed npm dependencies".into());
         }
+        println!(" Plugin created successfully");
         Ok(())
     }
 }

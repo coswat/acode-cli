@@ -6,10 +6,19 @@ This is a Acode plugin cli tool to create plugins and easily work with it
 
 ## Installation
 
-install it via npm 
+using cargo
 
 ```bash
-npm install -g @coswat/acode-cli
+git clone https://github.com/coswat/acode-cli.git
+cd acode-cli
+cargo build --release
+mv target/release/acode-cli ~/.local/bin/
+```
+
+using curl
+
+```bash
+curl -LJO https://github.com/coswat/acode-cli/releases/download/v1.0.5/acode-cli && mv acode-cli ~/.local/bin/
 ```
 
 ## Usage
