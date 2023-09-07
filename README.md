@@ -18,7 +18,7 @@ mv target/release/acode-cli ~/.local/bin/
 using curl
 
 ```bash
-curl -LJO https://github.com/coswat/acode-cli/releases/download/v1.0.5/acode-cli && mv acode-cli ~/.local/bin/
+curl -sL https://raw.githubusercontent.com/coswat/acode-cli/master/install.sh | sh
 ```
 
 ## Usage
