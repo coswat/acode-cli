@@ -7,12 +7,11 @@ use std::process::{Command, Stdio};
 //     args: Vec<&'a str>,
 // }
 
-pub fn exec<T, U>(cmd: T, args: &[U]) -> Result<()>
+pub fn exec<U>(cmd: &str, args: &[U]) -> Result<()>
 where
-    T: Into<String>,
     U: AsRef<str>,
 {
-    let mut cmd = Command::new(cmd.into());
+    let mut cmd = Command::new(cmd);
     for arg in args {
         cmd.arg(arg.as_ref());
     }
