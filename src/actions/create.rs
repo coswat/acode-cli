@@ -1,5 +1,4 @@
-use crate::{cmd_exec::exec, command::Command, config::Config};
-use anyhow::{Error, Result};
+use crate::{cmd_exec::exec, command::Command, config::Config, error::CliError};
 use clap::Args;
 use dialoguer::{theme::ColorfulTheme, Confirm, Input, Select};
 use serde::{Deserialize, Serialize};
@@ -63,11 +62,12 @@ impl Default for PluginJson {
 }
 
 impl Command for Create {
-    fn action(&self) -> Result<(), Error> {
+    type Error = CliError;
+    fn action(&self) -> Result<(), Self::Error> {
         let config = Config::new();
         let ans = prompts()?;
-        let dir = env::current_dir()?;
-        env::set_current_dir(&dir)?;
+        let dir = env::current_dir().map_err(|e| CliError::Error(e.to_string()))?;
+        env::set_current_dir(&dir).map_err(|e| CliError::Error(e.to_string()))?;
         let mut sp = Spinner::new(Spinners::Line, "Cloning plugin template...".into());
         if ans.lang == "JavaScript" {
             exec("git", &["clone", config.js_template, &ans.name])?;
@@ -75,7 +75,7 @@ impl Command for Create {
             exec("git", &["clone", config.ts_template, &ans.name])?;
         }
         sp.stop_with_message(" Plugin template cloned successfully".into());
-        env::set_current_dir(dir.join(&ans.name))?;
+        env::set_current_dir(dir.join(&ans.name)).map_err(|e| CliError::Error(e.to_string()))?;
         exec("rm", &["-rf", ".git"])?;
         exec("rm", &["-rf", "plugin.json"])?;
         if ans.git {
@@ -104,26 +104,30 @@ impl Command for Create {
     }
 }
 
-fn prompts() -> Result<Answers, Error> {
+fn prompts() -> Result<Answers, CliError> {
     let theme = ColorfulTheme::default();
     let name = Input::with_theme(&theme)
         .with_prompt("Enter a name for your Acode plugin:")
         .default("test-plugin".to_string())
-        .interact_text()?;
+        .interact_text()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let langs = &["JavaScript", "TypeScript"];
     let lang = Select::with_theme(&theme)
         .with_prompt("Choose a language")
         .default(0)
         .items(&langs[..])
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let git = Confirm::with_theme(&theme)
         .with_prompt("Initializing Git repository")
         .default(true)
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let plugin_id = Input::with_theme(&theme)
         .with_prompt("Enter id for your Acode Plugin:")
         .default("test_plugin_12".to_string())
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let price = Input::with_theme(&theme)
         .with_prompt("Enter price for your Acode Plugin in INR, if it's free then leave it on default value:")
         .default(0)
@@ -134,23 +138,28 @@ fn prompts() -> Result<Answers, Error> {
             }
             Ok(())
         })
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let author = Input::with_theme(&theme)
         .with_prompt("Enter the Name of Plugin developer:")
         .default("".to_string())
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let email = Input::with_theme(&theme)
         .with_prompt("Enter the Email of Plugin developer:")
         .default("".to_string())
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let github_name = Input::with_theme(&theme)
         .with_prompt("Enter the Github username of Plugin developer!:")
         .default("".to_string())
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
     let install_dep = Confirm::with_theme(&theme)
         .with_prompt("Install npm dependencies?")
         .default(true)
-        .interact()?;
+        .interact()
+        .map_err(|e| CliError::Error(e.to_string()))?;
 
     Ok(Answers {
         name,
@@ -165,14 +174,21 @@ fn prompts() -> Result<Answers, Error> {
     })
 }
 
-fn plugin_json(id: String, price: i32, name: String, email: String, github: String) -> Result<()> {
+fn plugin_json(
+    id: String,
+    price: i32,
+    name: String,
+    email: String,
+    github: String,
+) -> Result<(), CliError> {
     let mut json = PluginJson::default();
     json.id = id;
     json.price = price;
     json.author.name = name;
     json.author.email = email;
     json.author.github = github;
-    let json_str = serde_json::to_string_pretty(&json)?;
-    fs::write("plugin.json", json_str)?;
+    let json_str =
+        serde_json::to_string_pretty(&json).map_err(|e| CliError::Error(e.to_string()))?;
+    fs::write("plugin.json", json_str).map_err(|e| CliError::Error(e.to_string()))?;
     Ok(())
 }

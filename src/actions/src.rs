@@ -1,7 +1,5 @@
 use crate::{cmd_exec::exec, command::Command, error::CliError};
-use anyhow::{Error, Result};
 use clap::Args;
-use std::env;
 
 const SRC: &str = "https://github.com/coswat/acode-cli";
 
@@ -14,7 +12,8 @@ pub struct Src {
 }
 
 impl Command for Src {
-    fn action(&self) -> Result<(), Error> {
+    type Error = CliError;
+    fn action(&self) -> Result<(), Self::Error> {
         if self.show {
             show();
         } else {
@@ -24,20 +23,30 @@ impl Command for Src {
     }
 }
 
-fn open() -> Result<(), Error> {
-    match env::consts::OS {
-        "linux" => exec("xdg-open", &[SRC])?,
-        "macos" => exec("open", &[SRC])?,
-        "windows" => exec("start", &[SRC])?,
-        "android" => exec("xdg-open", &[SRC])?,
-        _ => {
-            Err::<&str, CliError>(CliError::PlatformNotSupported)?;
-            return Ok(());
-        }
-    }
+fn show() {
+    println!("Acode Plugin CLI : {}", SRC);
+}
+
+#[cfg(target_os = "android")]
+fn open() -> Result<(), CliError> {
+    exec("xdg-open", &[SRC])?;
     Ok(())
 }
 
-fn show() {
-    println!("Acode Plugin CLI : {}", SRC);
+#[cfg(target_os = "linux")]
+fn open() -> Result<(), CliError> {
+    exec("xdg-open", &[SRC])?;
+    Ok(())
+}
+
+#[cfg(target_os = "macos")]
+fn open() -> Result<(), CliError> {
+    exec("open", &[SRC])?;
+    Ok(())
+}
+
+#[cfg(target_os = "windows")]
+fn open() -> Result<(), CliError> {
+    exec("start", &[SRC])?;
+    Ok(())
 }

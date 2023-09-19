@@ -1,12 +1,12 @@
-use crate::command::Command;
-use anyhow::{Error, Result};
+use crate::{command::Command, error::CliError};
 use clap::Args;
 
 #[derive(Debug, Args)]
 pub struct SelfUpdate {}
 
 impl Command for SelfUpdate {
-    fn action(&self) -> Result<(), Error> {
+    type Error = CliError;
+    fn action(&self) -> Result<(), CliError> {
         println!("Unimplemented! Check github for new release");
         Ok(())
     }

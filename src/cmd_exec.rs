@@ -1,5 +1,4 @@
 use crate::error::CliError;
-use anyhow::Result;
 use std::process::{Command, Stdio};
 
 // pub struct Executer<'a> {
@@ -7,7 +6,7 @@ use std::process::{Command, Stdio};
 //     args: Vec<&'a str>,
 // }
 
-pub fn exec<U>(cmd: &str, args: &[U]) -> Result<()>
+pub fn exec<U>(cmd: &str, args: &[U]) -> Result<(), CliError>
 where
     U: AsRef<str>,
 {
@@ -17,9 +16,9 @@ where
     }
     cmd.stdout(Stdio::null());
     cmd.stderr(Stdio::null());
-    let status = cmd.status()?;
+    let status = cmd.status().map_err(|e| CliError::Error(e.to_string()))?;
     if !status.success() {
-        return Err(CliError::CommandFailed.into());
+        return Err(CliError::CommandFailed);
     }
     Ok(())
 }

@@ -1,7 +1,5 @@
 use crate::{cmd_exec::exec, command::Command, error::CliError};
-use anyhow::{Error, Result};
 use clap::Args;
-use std::env;
 
 const DOC: &str = "https://acode.foxdebug.com/plugin-docs";
 
@@ -14,7 +12,8 @@ pub struct Docs {
 }
 
 impl Command for Docs {
-    fn action(&self) -> Result<(), Error> {
+    type Error = CliError;
+    fn action(&self) -> Result<(), Self::Error> {
         if self.show {
             show();
         } else {
@@ -24,20 +23,30 @@ impl Command for Docs {
     }
 }
 
-fn open() -> Result<(), Error> {
-    match env::consts::OS {
-        "linux" => exec("xdg-open", &[DOC])?,
-        "macos" => exec("open", &[DOC])?,
-        "windows" => exec("start", &[DOC])?,
-        "android" => exec("xdg-open", &[DOC])?,
-        _ => {
-            Err::<&str, CliError>(CliError::PlatformNotSupported)?;
-            return Ok(());
-        }
-    }
+fn show() {
+    println!("Acode Plugun Docs: {}", DOC);
+}
+
+#[cfg(target_os = "android")]
+fn open() -> Result<(), CliError> {
+    exec("xdg-open", &[DOC])?;
     Ok(())
 }
 
-fn show() {
-    println!("Acode Plugun Docs: {}", DOC);
+#[cfg(target_os = "linux")]
+fn open() -> Result<(), CliError> {
+    exec("xdg-open", &[DOC])?;
+    Ok(())
+}
+
+#[cfg(target_os = "macos")]
+fn open() -> Result<(), CliError> {
+    exec("open", &[DOC])?;
+    Ok(())
+}
+
+#[cfg(target_os = "windows")]
+fn open() -> Result<(), CliError> {
+    exec("start", &[DOC])?;
+    Ok(())
 }

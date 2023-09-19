@@ -5,7 +5,6 @@ use crate::actions::{
     self_update::SelfUpdate,
     src::Src,
 };
-use anyhow::{Error, Result};
 use clap::Subcommand;
 
 #[derive(Subcommand, Debug)]
@@ -25,5 +24,6 @@ pub enum Commands {
 }
 
 pub trait Command {
-    fn action(&self) -> Result<(), Error>;
+    type Error;
+    fn action(&self) -> Result<(), Self::Error>;
 }
