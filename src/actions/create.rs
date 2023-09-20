@@ -42,6 +42,7 @@ struct Answers {
     email: String,
     github_name: String,
     install_dep: bool,
+    package_manager: Option<String>,
 }
 
 impl Default for PluginJson {
@@ -95,9 +96,10 @@ impl Command for Create {
         )?;
         sp.stop_with_message(" Created plugin.json".into());
         if ans.install_dep {
-            let mut sp = Spinner::new(Spinners::Line, "Installing npm dependencies...".into());
-            exec("npm", &["install"])?;
-            sp.stop_with_message(" Installed npm dependencies".into());
+            let mut sp = Spinner::new(Spinners::Line, "Installing dependencies...".into());
+            let pm = ans.package_manager.unwrap();
+            exec(pm.as_str(), &["install"])?;
+            sp.stop_with_message(" Installed dependencies".into());
         }
         println!(" Plugin created successfully");
         Ok(())
@@ -160,8 +162,18 @@ fn prompts() -> Result<Answers, CliError> {
         .default(true)
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+    let pms = &["npm", "pnpm", "yarn", "bun"];
+    let mut pm = 0;
+    if install_dep {
+        pm = Select::with_theme(&theme)
+            .with_prompt("Choose a package manager")
+            .default(0)
+            .items(&pms[..])
+            .interact()
+            .map_err(|e| CliError::Error(e.to_string()))?;
+    }
 
-    Ok(Answers {
+    let mut ans = Answers {
         name,
         lang: langs[lang].to_string(),
         git,
@@ -171,7 +183,13 @@ fn prompts() -> Result<Answers, CliError> {
         email,
         github_name,
         install_dep,
-    })
+        package_manager: None,
+    };
+    if install_dep {
+        ans.package_manager = Some(pms[pm].to_string());
+    }
+
+    Ok(ans)
 }
 
 fn plugin_json(

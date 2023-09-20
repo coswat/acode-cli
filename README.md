@@ -22,3 +22,5 @@ run it using `acode-cli` command
 ```bash
 acode-cli --help
 ```
+
+Found Bugs? Open a Issue

@@ -1,11 +1,6 @@
 use crate::error::CliError;
 use std::process::{Command, Stdio};
 
-// pub struct Executer<'a> {
-//     cmd: String,
-//     args: Vec<&'a str>,
-// }
-
 pub fn exec<U>(cmd: &str, args: &[U]) -> Result<(), CliError>
 where
     U: AsRef<str>,
