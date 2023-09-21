@@ -6,13 +6,18 @@ This is a Acode plugin cli tool to create plugins and easily work with it
 
 ## Installation
 
-using cargo
+build it from source
 
 ```bash
 git clone https://github.com/coswat/acode-cli.git
 cd acode-cli
 cargo build --release
 mv target/release/acode-cli ~/.local/bin/
+```
+using cargo
+
+```bash
+cargo install acode-cli
 ```
 
 ## Usage
