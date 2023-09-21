@@ -199,12 +199,16 @@ fn plugin_json(
     email: String,
     github: String,
 ) -> Result<(), CliError> {
-    let mut json = PluginJson::default();
-    json.id = id;
-    json.price = price;
-    json.author.name = name;
-    json.author.email = email;
-    json.author.github = github;
+    let json = PluginJson {
+        id,
+        price,
+        author: Author {
+            name,
+            email,
+            github,
+        },
+        ..Default::default()
+    };
     let json_str =
         serde_json::to_string_pretty(&json).map_err(|e| CliError::Error(e.to_string()))?;
     fs::write("plugin.json", json_str).map_err(|e| CliError::Error(e.to_string()))?;

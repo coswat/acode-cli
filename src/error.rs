@@ -23,7 +23,7 @@ impl Error for CliError {}
 
 impl CliError {
     pub fn log(self) -> ! {
-        eprintln!("\x1b[31macode cli:\x1b[0m {}", self.to_string());
+        eprintln!("\x1b[31macode cli:\x1b[0m {}", self);
         exit(1);
     }
 }
