@@ -158,7 +158,7 @@ fn prompts() -> Result<Answers, CliError> {
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
     let install_dep = Confirm::with_theme(&theme)
-        .with_prompt("Install npm dependencies?")
+        .with_prompt("Install dependencies?")
         .default(true)
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
