@@ -7,6 +7,8 @@ use std::{
 #[derive(Debug)]
 pub enum CliError {
     CommandFailed,
+    PluginNotFound,
+    PaymentRequired,
     Error(String),
 }
 
@@ -14,6 +16,8 @@ impl Display for CliError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FResult {
         match self {
             Self::CommandFailed => write!(f, "command failed"),
+            Self::PluginNotFound => write!(f, "plugin not found in the server"),
+            Self::PaymentRequired => write!(f, "payment required for this plugin"),
             Self::Error(err) => write!(f, "{}", err),
         }
     }

@@ -1,4 +1,4 @@
-use crate::{cmd_exec::exec, command::Command, error::CliError};
+use crate::{command::Command, error::CliError, open::open};
 use clap::Args;
 
 const SRC: &str = "https://github.com/coswat/acode-cli";
@@ -17,7 +17,7 @@ impl Command for Src {
         if self.show {
             show();
         } else {
-            open()?;
+            open(SRC)?;
         }
         Ok(())
     }
@@ -25,28 +25,4 @@ impl Command for Src {
 
 fn show() {
     println!("Acode Plugin CLI : {}", SRC);
-}
-
-#[cfg(target_os = "android")]
-fn open() -> Result<(), CliError> {
-    exec("xdg-open", &[SRC])?;
-    Ok(())
-}
-
-#[cfg(target_os = "linux")]
-fn open() -> Result<(), CliError> {
-    exec("xdg-open", &[SRC])?;
-    Ok(())
-}
-
-#[cfg(target_os = "macos")]
-fn open() -> Result<(), CliError> {
-    exec("open", &[SRC])?;
-    Ok(())
-}
-
-#[cfg(target_os = "windows")]
-fn open() -> Result<(), CliError> {
-    exec("start", &[SRC])?;
-    Ok(())
 }

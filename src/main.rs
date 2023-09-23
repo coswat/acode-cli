@@ -4,6 +4,7 @@ mod cmd_exec;
 mod command;
 mod config;
 mod error;
+mod open;
 
 use crate::command::{Command, Commands};
 use clap::Parser;
@@ -17,6 +18,7 @@ fn main() {
         Commands::Build(s) => s.action(),
         Commands::BuildRelease(s) => s.action(),
         Commands::Src(s) => s.action(),
+        Commands::Plugin(s) => s.action(),
         Commands::SelfUpdate(s) => s.action(),
     };
     match rs {

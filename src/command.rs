@@ -2,6 +2,7 @@ use crate::actions::{
     build::{Build, BuildRelease},
     create::Create,
     docs::Docs,
+    plugin::Plugin,
     self_update::SelfUpdate,
     src::Src,
 };
@@ -19,6 +20,8 @@ pub enum Commands {
     BuildRelease(BuildRelease),
     /// Acode cli source code
     Src(Src),
+    /// Do plugin details search and details
+    Plugin(Plugin),
     /// Update the Acode cli to the latest version
     SelfUpdate(SelfUpdate),
 }

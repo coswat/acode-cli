@@ -1,4 +1,4 @@
-use crate::{cmd_exec::exec, command::Command, error::CliError};
+use crate::{command::Command, error::CliError, open::open};
 use clap::Args;
 
 const DOC: &str = "https://acode.foxdebug.com/plugin-docs";
@@ -17,7 +17,7 @@ impl Command for Docs {
         if self.show {
             show();
         } else {
-            open()?;
+            open(DOC)?;
         }
         Ok(())
     }
@@ -25,28 +25,4 @@ impl Command for Docs {
 
 fn show() {
     println!("Acode Plugun Docs: {}", DOC);
-}
-
-#[cfg(target_os = "android")]
-fn open() -> Result<(), CliError> {
-    exec("xdg-open", &[DOC])?;
-    Ok(())
-}
-
-#[cfg(target_os = "linux")]
-fn open() -> Result<(), CliError> {
-    exec("xdg-open", &[DOC])?;
-    Ok(())
-}
-
-#[cfg(target_os = "macos")]
-fn open() -> Result<(), CliError> {
-    exec("open", &[DOC])?;
-    Ok(())
-}
-
-#[cfg(target_os = "windows")]
-fn open() -> Result<(), CliError> {
-    exec("start", &[DOC])?;
-    Ok(())
 }
