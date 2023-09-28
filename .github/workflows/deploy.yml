@@ -21,10 +21,6 @@ jobs:
             os: ubuntu-latest
             target: x86_64-unknown-linux-musl
 
-          - build: macos
-            os: macos-latest
-            target: x86_64-apple-darwin
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -52,7 +48,7 @@ jobs:
         shell: bash
         run: |
           # Replace with the name of your binary
-          binary_name="<BINARY_NAME>"
+          binary_name="acode-cli"
 
           dirname="$binary_name-${{ env.VERSION }}-${{ matrix.target }}"
           mkdir "$dirname"
