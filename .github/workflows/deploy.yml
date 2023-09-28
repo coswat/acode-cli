@@ -17,13 +17,25 @@ jobs:
       matrix:
         # You can add more, for any target you'd like!
         include:
-          - build: linux
-            os: ubuntu-latest
-            target: x86_64-unknown-linux-musl
+          - build: macos
+            os: macos-latest
+            target: arm-linux-androideabi
 
-          - build: linux 
-            os: ubuntu-latest
+          - build: macos
+            os: macos-latest
             target: aarch64-linux-android
+
+          - build: macos 
+            os: macos-latest
+            target: armv7-linux-androideabi
+
+          - build: macos
+            os: macos-latest
+            target: x86_64-linux-android
+
+          - build: macos
+            os: macos-latest
+            target: i686-linux-android
 
     steps:
       - name: Checkout
