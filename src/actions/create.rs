@@ -34,7 +34,7 @@ struct Author {
 #[derive(Debug)]
 struct Answers {
     name: String,
-    lang: String,
+    lang: i32,
     git: bool,
     plugin_id: String,
     price: i32,
@@ -70,7 +70,8 @@ impl Command for Create {
         let dir = env::current_dir().map_err(|e| CliError::Error(e.to_string()))?;
         env::set_current_dir(&dir).map_err(|e| CliError::Error(e.to_string()))?;
         let mut sp = Spinner::new(Spinners::Line, "Cloning plugin template...".into());
-        if ans.lang == "JavaScript" {
+        // 0 - JavaScript
+        if ans.lang == 0 {
             exec("git", &["clone", config.js_template, &ans.name])?;
         } else {
             exec("git", &["clone", config.ts_template, &ans.name])?;
@@ -175,7 +176,7 @@ fn prompts() -> Result<Answers, CliError> {
 
     let mut ans = Answers {
         name,
-        lang: langs[lang].to_string(),
+        lang: lang as i32,
         git,
         plugin_id,
         price,
