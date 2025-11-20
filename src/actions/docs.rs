@@ -12,11 +12,11 @@ pub struct Docs {
 }
 
 impl Command for Docs {
-    type Error = CliError;
-    fn action(&self) -> Result<(), Self::Error> {
+    fn action(&self) -> Result<(), CliError> {
         if self.show {
             show();
         } else {
+            println!("Trying to open the docs url in a browser");
             open(DOC)?;
         }
         Ok(())

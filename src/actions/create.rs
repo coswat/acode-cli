@@ -1,6 +1,6 @@
 use crate::{cli::Command, cmd_exec::exec, config::Config, error::CliError};
 use clap::Args;
-use dialoguer::{theme::ColorfulTheme, Confirm, Input, Select};
+use dialoguer::{Confirm, Input, Select, theme::ColorfulTheme};
 use serde::{Deserialize, Serialize};
 use serde_json;
 use spinners::{Spinner, Spinners};
@@ -63,14 +63,16 @@ impl Default for PluginJson {
 }
 
 impl Command for Create {
-    type Error = CliError;
-    fn action(&self) -> Result<(), Self::Error> {
+    fn action(&self) -> Result<(), CliError> {
         let config = Config::new();
         let ans = prompts()?;
         let dir = env::current_dir().map_err(|e| CliError::Error(e.to_string()))?;
         env::set_current_dir(&dir).map_err(|e| CliError::Error(e.to_string()))?;
-        let mut sp = Spinner::new(Spinners::Line, "Cloning plugin template...".into());
-        // 0 - JavaScript
+
+        // Spinning animation Initialiazation
+        let mut sp = Spinner::new(Spinners::Dots, "Cloning plugin template...".into());
+
+        // 0 - JavaScript else Typescript
         if ans.lang == 0 {
             exec("git", &["clone", config.js_template, &ans.name])?;
         } else {
@@ -78,16 +80,21 @@ impl Command for Create {
         }
         sp.stop_with_message(" Plugin template cloned successfully".into());
         env::set_current_dir(dir.join(&ans.name)).map_err(|e| CliError::Error(e.to_string()))?;
+
         exec("rm", &["-rf", ".git"])?;
         exec("rm", &["-rf", "plugin.json"])?;
+
+        // Git Initialiazation if true
         if ans.git {
-            let mut sp = Spinner::new(Spinners::Line, "Initializing git repo...".into());
+            let mut sp = Spinner::new(Spinners::Dots, "Initializing git repo...".into());
             exec("git", &["init"])?;
             exec("git", &["add", "."])?;
             exec("git", &["commit", "-m", "Initial commit"])?;
             sp.stop_with_message(" Initialized git repo".into());
         }
-        let mut sp = Spinner::new(Spinners::Line, "Creating plugin.json file".into());
+
+        // Plugin.json creation
+        let mut sp = Spinner::new(Spinners::Dots, "Creating plugin.json file".into());
         plugin_json(
             ans.plugin_id,
             ans.price,
@@ -96,12 +103,15 @@ impl Command for Create {
             ans.github_name,
         )?;
         sp.stop_with_message(" Created plugin.json".into());
+
+        // Dependency installations
         if ans.install_dep {
-            let mut sp = Spinner::new(Spinners::Line, "Installing dependencies...".into());
+            let mut sp = Spinner::new(Spinners::Dots, "Installing dependencies...".into());
             let pm = ans.package_manager.unwrap();
             exec(pm.as_str(), &["install"])?;
             sp.stop_with_message(" Installed dependencies".into());
         }
+
         println!(" Plugin created successfully");
         Ok(())
     }
@@ -109,11 +119,16 @@ impl Command for Create {
 
 fn prompts() -> Result<Answers, CliError> {
     let theme = ColorfulTheme::default();
+
+    // CLI Prompt Starts here..
+    // Name for the plugin
     let name = Input::with_theme(&theme)
         .with_prompt("Enter a name for your Acode plugin:")
         .default("test-plugin".to_string())
         .interact_text()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Plugin template language ( ts or js)
     let langs = &["JavaScript", "TypeScript"];
     let lang = Select::with_theme(&theme)
         .with_prompt("Choose a language")
@@ -121,16 +136,22 @@ fn prompts() -> Result<Answers, CliError> {
         .items(&langs[..])
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Git Initialiazation prompt
     let git = Confirm::with_theme(&theme)
         .with_prompt("Initializing Git repository")
         .default(true)
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Plugin ID prompt
     let plugin_id = Input::with_theme(&theme)
         .with_prompt("Enter id for your Acode Plugin:")
         .default("test_plugin_12".to_string())
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Plugin price - Should be between 10 - 10000
     let price = Input::with_theme(&theme)
         .with_prompt("Enter price for your Acode Plugin in INR, if it's free then leave it on default value:")
         .default(0)
@@ -143,21 +164,29 @@ fn prompts() -> Result<Answers, CliError> {
         })
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Author name prompt
     let author = Input::with_theme(&theme)
         .with_prompt("Enter the Name of Plugin developer:")
         .default("".to_string())
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Email address prompt
     let email = Input::with_theme(&theme)
         .with_prompt("Enter the Email of Plugin developer:")
         .default("".to_string())
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Github username prompt
     let github_name = Input::with_theme(&theme)
         .with_prompt("Enter the Github username of Plugin developer!:")
         .default("".to_string())
         .interact()
         .map_err(|e| CliError::Error(e.to_string()))?;
+
+    // Dependency installation prompt
     let install_dep = Confirm::with_theme(&theme)
         .with_prompt("Install dependencies?")
         .default(true)

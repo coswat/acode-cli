@@ -30,11 +30,10 @@ struct PluginData {
 }
 
 impl Command for Plugin {
-    type Error = CliError;
-    fn action(&self) -> Result<(), Self::Error> {
+    fn action(&self) -> Result<(), CliError> {
         if self.open {
             let url = format!("http://acode.foxdebug.com/plugin/{}", self.name);
-            println!("Opening plugin url in browser");
+            println!("Trying to open the plugin url in a browser");
             open(url)?;
             process::exit(0);
         }
@@ -43,7 +42,16 @@ impl Command for Plugin {
             process::exit(0);
         }
         let values = self.plugin_data()?;
-        println!(" Id: {} \n Name: {} \n Price: {}₹ \n Likes: {} \n Dislikes: {} \n Downloads: {} \n Author: {} \n", values.id, values.name, values.price, values.votes_up, values.votes_down, values.downloads, values.author);
+        println!(
+            " Id: {} \n Name: {} \n Price: {}₹ \n Likes: {} \n Dislikes: {} \n Downloads: {} \n Author: {} \n",
+            values.id,
+            values.name,
+            values.price,
+            values.votes_up,
+            values.votes_down,
+            values.downloads,
+            values.author
+        );
         Ok(())
     }
 }
@@ -52,14 +60,17 @@ impl Plugin {
     fn plugin_data(&self) -> Result<PluginData, CliError> {
         let url = format!("http://acode.foxdebug.com/api/plugins/{}", self.name);
         let req = blocking::get(url.as_str()).map_err(|e| CliError::Error(e.to_string()))?;
+        // Invalid ID
         if req.status() == 404 {
             return Err(CliError::PluginNotFound);
         }
         let values = req
             .json::<PluginData>()
             .map_err(|e| CliError::Error(e.to_string()))?;
+
         Ok(values)
     }
+
     fn download(&self) -> Result<(), CliError> {
         let durl = format!(
             "http://acode.foxdebug.com/api/plugins/download/{}",
@@ -71,10 +82,13 @@ impl Plugin {
             sp.stop_with_message("".into());
             return Err(CliError::PluginNotFound);
         }
+
+        // Paid plugin (Behind paywall)
         if req.status() == 403 {
             sp.stop_with_message("".into());
             return Err(CliError::PaymentRequired);
         }
+
         let mut out = fs::File::create("plugin.zip").map_err(|e| CliError::Error(e.to_string()))?;
         io::copy(&mut req, &mut out).map_err(|e| CliError::Error(e.to_string()))?;
         sp.stop_with_message(" Plugin.zip installed successfully".to_string());

@@ -6,7 +6,8 @@ use crate::actions::{
     self_update::SelfUpdate,
     src::Src,
 };
-use clap::Parser;
+use crate::error::CliError;
+use clap::{Parser, Subcommand};
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about)]
@@ -15,8 +16,6 @@ pub struct AcodeCli {
     #[clap(subcommand)]
     pub command: Commands,
 }
-
-use clap::Subcommand;
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
@@ -37,6 +36,5 @@ pub enum Commands {
 }
 
 pub trait Command {
-    type Error;
-    fn action(&self) -> Result<(), Self::Error>;
+    fn action(&self) -> Result<(), CliError>;
 }

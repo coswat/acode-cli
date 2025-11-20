@@ -8,7 +8,7 @@ pub fn exec<U: AsRef<str>>(cmd: &str, args: &[U]) -> Result<(), CliError> {
     }
     cmd.stdout(Stdio::null());
     cmd.stderr(Stdio::null());
-    let status = cmd.status().map_err(|e| CliError::Error(e.to_string()))?;
+    let status = cmd.status().map_err(|_| CliError::DependencyNotFound)?;
     if !status.success() {
         return Err(CliError::CommandFailed);
     }

@@ -1,12 +1,10 @@
 [package]
 name = "acode-cli"
-version = "1.0.6"
-edition = "2021"
-author = "coswat"
+version = "1.0.7"
+edition = "2024"
+authors = ["coswat"]
 description = "Acode plugin CLI tool to devlop plugins faster"
 license = "MIT"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }

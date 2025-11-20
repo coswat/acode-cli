@@ -13,8 +13,7 @@ pub struct Build {
 pub struct BuildRelease {}
 
 impl Command for Build {
-    type Error = CliError;
-    fn action(&self) -> Result<(), Self::Error> {
+    fn action(&self) -> Result<(), CliError> {
         if self.release {
             build_release()?;
         } else {
@@ -25,8 +24,7 @@ impl Command for Build {
 }
 
 impl Command for BuildRelease {
-    type Error = CliError;
-    fn action(&self) -> Result<(), Self::Error> {
+    fn action(&self) -> Result<(), CliError> {
         build_release()?;
         Ok(())
     }

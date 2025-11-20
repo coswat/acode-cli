@@ -12,8 +12,7 @@ pub struct Src {
 }
 
 impl Command for Src {
-    type Error = CliError;
-    fn action(&self) -> Result<(), Self::Error> {
+    fn action(&self) -> Result<(), CliError> {
         if self.show {
             show();
         } else {

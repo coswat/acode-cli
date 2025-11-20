@@ -5,7 +5,6 @@ use clap::Args;
 pub struct SelfUpdate {}
 
 impl Command for SelfUpdate {
-    type Error = CliError;
     fn action(&self) -> Result<(), CliError> {
         println!("Unimplemented! Check src url (github) for new release >_<");
         Ok(())

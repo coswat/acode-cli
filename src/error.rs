@@ -9,15 +9,20 @@ pub enum CliError {
     CommandFailed,
     PluginNotFound,
     PaymentRequired,
+    DependencyNotFound,
     Error(String),
 }
 
 impl Display for CliError {
     fn fmt(&self, f: &mut Formatter<'_>) -> FResult {
         match self {
-            Self::CommandFailed => write!(f, "command failed"),
-            Self::PluginNotFound => write!(f, "plugin not found in the server"),
-            Self::PaymentRequired => write!(f, "payment required for this plugin"),
+            Self::CommandFailed => write!(f, "Command failed"),
+            Self::PluginNotFound => write!(f, "Plugin not found in the server"),
+            Self::PaymentRequired => write!(f, "Payment is required for this plugin"),
+            Self::DependencyNotFound => write!(
+                f,
+                "The program for this command is not installed in your device"
+            ),
             Self::Error(err) => write!(f, "{}", err),
         }
     }
