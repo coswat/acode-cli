@@ -19,7 +19,7 @@ openssl = { version = "0.10", features = ["vendored"] }
 strip = true
 opt-level = "z"
 lto = true 
-panic = "abort"
+codegen-units = 1
 
 [[bin]]
 name = "acode-cli"
