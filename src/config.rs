@@ -9,9 +9,9 @@ impl Config<'_> {
     pub fn new() -> Self {
         Self {
             src_url: "https://github.com/coswat/acode-cli",
-            ts_template: "https://github.com/bajrangCoder/AcodeTSTemplate.git",
-            js_template: "https://github.com/deadlyjack/acode-plugin.git",
-            docs_url: "https://acode.foxdebug.com/plugin-docs",
+            ts_template: "https://github.com/Acode-Foundation/AcodeTSTemplate.git",
+            js_template: "https://github.com/Acode-Foundation/acode-plugin.git",
+            docs_url: "https://docs.acode.app/",
         }
     }
 }

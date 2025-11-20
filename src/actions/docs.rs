@@ -1,4 +1,4 @@
-use crate::{cli::Command, cmd_exec::exec, error::CliError, open::open};
+use crate::{cli::Command, error::CliError, open::open};
 use clap::Args;
 
 const DOC: &str = "https://docs.acode.app/";
