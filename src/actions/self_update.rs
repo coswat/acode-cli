@@ -1,4 +1,5 @@
-use crate::{command::Command, error::CliError};
+use crate::cli::Command;
+use crate::error::CliError;
 use clap::Args;
 
 #[derive(Debug, Args)]

@@ -1,4 +1,4 @@
-use crate::{command::Command, error::CliError, open::open};
+use crate::{cli::Command, error::CliError, open::open};
 use clap::Args;
 use reqwest::blocking;
 use serde::Deserialize;

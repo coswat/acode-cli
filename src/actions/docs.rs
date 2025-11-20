@@ -1,7 +1,7 @@
-use crate::{command::Command, error::CliError, open::open};
+use crate::{cli::Command, cmd_exec::exec, error::CliError, open::open};
 use clap::Args;
 
-const DOC: &str = "https://acode.foxdebug.com/plugin-docs";
+const DOC: &str = "https://docs.acode.app/";
 
 #[derive(Debug, Args)]
 pub struct Docs {

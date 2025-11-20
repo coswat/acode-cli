@@ -1,14 +1,12 @@
 mod actions;
 mod cli;
 mod cmd_exec;
-mod command;
 mod config;
 mod error;
 mod open;
 
-use crate::command::{Command, Commands};
 use clap::Parser;
-use cli::AcodeCli;
+use cli::{AcodeCli, Command, Commands};
 
 fn main() {
     let cmd = AcodeCli::parse();
