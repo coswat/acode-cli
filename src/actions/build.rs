@@ -1,4 +1,4 @@
-use crate::{cli::Command, cmd_exec::exec, error::CliError};
+use crate::{cli::Command, error::CliError, helpers::exec};
 use clap::Args;
 
 #[derive(Debug, Args)]

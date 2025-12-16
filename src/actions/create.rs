@@ -1,4 +1,4 @@
-use crate::{cli::Command, cmd_exec::exec, config::Config, error::CliError};
+use crate::{cli::Command, config::Config, error::CliError, helpers::exec};
 use clap::Args;
 use dialoguer::{Confirm, Input, Select, theme::ColorfulTheme};
 use serde::{Deserialize, Serialize};

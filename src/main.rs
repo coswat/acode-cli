@@ -1,9 +1,8 @@
 mod actions;
 mod cli;
-mod cmd_exec;
 mod config;
 mod error;
-mod open;
+mod helpers;
 
 use clap::Parser;
 use cli::{AcodeCli, Command, Commands};
